@@ -1,0 +1,74 @@
+{
+  "$comentario": "Medidas em metros. Origem (0,0) = canto interior noroeste do Quarto 1; x cresce para este (direita), y para sul (baixo). Valores tirados da planta do magicplan, arredondados.",
+  "nome": "Casa",
+  "alturaParedes": 2.6,
+  "divisoes": [
+    {
+      "id": "quarto1",
+      "nome": "Quarto 1",
+      "poligono": [[0, 0], [3.0, 0], [3.0, 2.85], [2.65, 2.85], [2.65, 4.3], [0, 4.3]],
+      "janelas": [{ "de": [0, 0.72], "ate": [0, 1.98], "persiana": "cover.persiana_quarto_1" }],
+      "dispositivos": [
+        { "entidade": "light.candeeiro_nuno", "x": 0.55, "y": 2.0 },
+        { "entidade": "light.candeeiro_marisa", "x": 2.3, "y": 2.0 }
+      ]
+    },
+    {
+      "id": "sala",
+      "nome": "Sala",
+      "poligono": [[3.1, 0], [6.24, 0], [6.24, 4.3], [3.45, 4.3], [3.45, 2.85], [3.1, 2.85]],
+      "janelas": [{ "de": [3.97, 0], "ate": [5.47, 0] }],
+      "portas": [{ "de": [6.24, 3.23], "ate": [6.24, 4.08], "nome": "Porta de entrada" }],
+      "dispositivos": []
+    },
+    {
+      "id": "corredor",
+      "nome": "Corredor",
+      "poligono": [[2.65, 2.85], [3.45, 2.85], [3.45, 6.65], [2.65, 6.65]],
+      "janelas": [],
+      "dispositivos": [{ "entidade": "light.corredor", "x": 3.05, "y": 4.75 }]
+    },
+    {
+      "id": "quarto2",
+      "nome": "Quarto 2",
+      "poligono": [[0, 4.4], [2.55, 4.4], [2.55, 6.62], [0, 6.62]],
+      "janelas": [{ "de": [0, 5.0], "ate": [0, 6.0], "persiana": "cover.persiana_quarto_2" }],
+      "dispositivos": [
+        { "entidade": "light.quarto_2_tecla_1", "x": 1.0, "y": 5.5 },
+        { "entidade": "light.quarto_2_tecla_2", "x": 1.6, "y": 5.5 }
+      ]
+    },
+    {
+      "id": "quarto3",
+      "nome": "Quarto 3",
+      "poligono": [[3.6, 4.4], [6.22, 4.4], [6.22, 6.62], [3.6, 6.62]],
+      "janelas": [{ "de": [6.22, 5.0], "ate": [6.22, 6.0], "persiana": "cover.persiana_quarto_3" }],
+      "dispositivos": [{ "entidade": "light.quarto_3", "x": 4.9, "y": 5.5 }]
+    },
+    {
+      "id": "wc",
+      "nome": "WC",
+      "poligono": [[1.1, 6.72], [2.57, 6.72], [2.57, 9.57], [1.1, 9.57]],
+      "janelas": [{ "de": [1.1, 7.61], "ate": [1.1, 8.21], "persiana": "cover.persiana_wc" }],
+      "dispositivos": []
+    },
+    {
+      "id": "cozinha",
+      "nome": "Cozinha",
+      "poligono": [[2.66, 6.72], [6.16, 6.72], [6.16, 9.59], [2.66, 9.59]],
+      "janelas": [{ "de": [6.16, 7.43], "ate": [6.16, 8.93], "persiana": "cover.persiana_cozinha" }],
+      "dispositivos": []
+    },
+    {
+      "id": "lavandaria",
+      "nome": "Lavandaria",
+      "poligono": [[1.58, 9.69], [6.16, 9.69], [6.16, 11.8], [5.75, 12.25], [1.75, 10.35]],
+      "janelas": [{ "de": [6.16, 10.44], "ate": [6.16, 11.54] }],
+      "dispositivos": []
+    }
+  ],
+  "acoesRapidas": {
+    "todasAsLuzes": "light.todas_as_luzes",
+    "todasAsPersianas": "cover.todas_as_persianas"
+  }
+}

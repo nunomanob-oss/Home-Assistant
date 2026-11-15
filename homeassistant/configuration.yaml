@@ -1,0 +1,26 @@
+# Configuração principal do Home Assistant.
+# A localização (latitude/longitude) é definida na interface do HA e não aqui,
+# para que a morada nunca entre no repositório.
+
+default_config:
+
+homeassistant:
+  name: Casa
+  country: PT
+  language: pt
+  time_zone: Europe/Lisbon
+  unit_system: metric
+  currency: EUR
+  # Cada ficheiro em packages/ agrupa uma área (grupos, cenas, homekit...).
+  packages: !include_dir_named packages
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+recorder:
+  # Histórico para os gráficos da app (Fase 5).
+  purge_keep_days: 30
+
+logger:
+  default: warning

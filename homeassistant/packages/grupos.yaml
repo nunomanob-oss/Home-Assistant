@@ -1,0 +1,25 @@
+# Grupos usados pelas ações rápidas da app ("tudo desligado", "fechar todas as persianas")
+# e pela Siri. Os IDs vêm de docs/DEVICES.md: renomeia as entidades antes de copiar este ficheiro.
+
+light:
+  - platform: group
+    name: Todas as luzes
+    unique_id: grupo_todas_as_luzes
+    entities:
+      - light.candeeiro_nuno
+      - light.candeeiro_marisa
+      - light.quarto_2_tecla_1
+      - light.quarto_2_tecla_2
+      - light.quarto_3
+      - light.corredor
+
+cover:
+  - platform: group
+    name: Todas as persianas
+    unique_id: grupo_todas_as_persianas
+    entities:
+      - cover.persiana_quarto_1
+      - cover.persiana_quarto_2
+      - cover.persiana_quarto_3
+      - cover.persiana_wc
+      - cover.persiana_cozinha

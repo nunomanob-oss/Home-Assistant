@@ -1,0 +1,23 @@
+# Segredos (nunca commitar)
+.env
+.env.*
+!.env.example
+secrets.yaml
+*.key
+*.pem
+
+# Plantas originais (podem conter a morada)
+*.pdf
+plantas/
+
+# Node / Vite
+node_modules/
+dist/
+*.local
+.vite/
+
+# Sistema
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
