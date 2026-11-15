@@ -1,6 +1,6 @@
 # Instalação — Fase 0: Home Assistant no Mac
 
-Objetivo desta fase: ter o Home Assistant a correr numa máquina virtual no MacBook Pro M1, com todos os dispositivos Tuya visíveis e com nomes em português. Demora cerca de 1 hora.
+Objetivo desta fase: ter o Home Assistant a correr numa máquina virtual no MacBook Pro M1, com os dispositivos ligados diretamente ao HA (sem a app SmartLife) e com nomes em português. Demora cerca de 1 hora.
 
 > **Porquê uma VM e não Docker?** No macOS o Docker corre dentro de uma VM própria e não anuncia serviços na rede local (mDNS). O HomeKit Bridge (Siri) e a descoberta de dispositivos precisam disso. Uma VM do UTM em modo *bridge* comporta-se como um computador verdadeiro na rede. Quando chegar o mini-PC, fazes um backup aqui e restauras lá.
 
@@ -37,45 +37,13 @@ Objetivo desta fase: ter o Home Assistant a correr numa máquina virtual no MacB
 Em **Definições → Suplementos → Loja de suplementos**, instala:
 
 - **Studio Code Server** (para editar ficheiros do HA no browser). Ativa "Mostrar na barra lateral".
-- **Terminal & SSH** (para instalar o HACS no passo 6).
+- **Terminal & SSH** (só se precisares do HACS no passo 6).
 
-## 5. Ligar os dispositivos Tuya (rápido, pela nuvem)
+## 5. Dispositivos Zigbee: diretamente no HA, sem conta Tuya (caminho principal)
 
-Isto põe tudo a funcionar já, enquanto não temos o controlo local.
+Os dispositivos **Zigbee** passam a falar com um adaptador Zigbee teu, ligado ao HA. Não precisas de conta Tuya, de nuvem nem da app SmartLife: o HA (através do Zigbee2MQTT) encontra-os diretamente.
 
-1. Na app SmartLife: **Eu → ⚙️ Definições → Conta e segurança → Código de utilizador**. Copia o código.
-2. No HA: **Definições → Dispositivos e serviços → Adicionar integração → Tuya**. Cola o código de utilizador.
-3. O HA mostra um QR code. Lê-o com a app SmartLife (botão de leitura no canto superior direito do Início) e confirma.
-4. Devem aparecer o gateway, as 5 persianas, os interruptores e os 2 candeeiros.
-
-## 6. Controlo local para os dispositivos Wi-Fi (Tuya Local)
-
-Os dispositivos **Wi-Fi** passam a ser controlados diretamente na rede de casa, sem a nuvem.
-
-1. **Instalar o HACS:** abre o Terminal (barra lateral) e corre:
-   ```
-   wget -O - https://get.hacs.xyz | bash -
-   ```
-   Reinicia o HA (**Definições → Sistema → Reiniciar**). Depois vai a **Adicionar integração → HACS** e segue o pedido de autorização do GitHub.
-2. No HACS, procura e instala **Tuya Local** (de `make-all`). Reinicia o HA.
-3. **Adicionar integração → Tuya Local** e escolhe a opção de configuração **assistida pela nuvem (Smart Life)**. Lês outra vez um QR com a app SmartLife, e o Tuya Local vai buscar as *local keys* sozinho.
-4. Adiciona cada dispositivo **Wi-Fi** e escolhe o tipo sugerido.
-5. Quando um dispositivo funcionar pelo Tuya Local, desativa a entidade equivalente da integração Tuya (nuvem) para não ficares com duplicados.
-
-### Alternativa: conta de programador Tuya IoT (só se o passo 3 falhar)
-
-1. Cria conta grátis em <https://iot.tuya.com> e cria um **Cloud Project** com o data center **Central Europe**.
-2. Em **Devices → Link App Account**, lê o QR com a SmartLife.
-3. Em **API Explorer → Device Management → Query device details**, copia o `local_key` de cada dispositivo.
-4. No Tuya Local escolhe a configuração manual e cola o ID, o IP e a local key.
-
-> As local keys mudam se voltares a emparelhar o dispositivo na SmartLife. Nesse caso, repete o passo 3.
-
-## 7. Zigbee2MQTT (quando chegar o adaptador Zigbee)
-
-Os dispositivos **Zigbee** saem do gateway Tuya e passam a falar com um adaptador Zigbee teu, 100 % local.
-
-**Recomendação para quem usa VM: SLZB-06 (Ethernet/PoE)** em vez de uma pen USB. Liga-se pela rede, por isso não há passagem de USB para a VM e a mudança para o mini-PC é trivial. A pen SONOFF ZBDongle-E também funciona: no UTM, liga-a à VM pelo ícone de USB da barra de ferramentas.
+**Precisas do adaptador.** Para quem usa VM, recomendo o **SLZB-06 (Ethernet/PoE)** em vez de uma pen USB. Liga-se pela rede, por isso não há passagem de USB para a VM e a mudança para o mini-PC é trivial. A pen SONOFF ZBDongle-E também funciona: no UTM, liga-a à VM pelo ícone de USB da barra de ferramentas.
 
 1. **Suplementos → Loja → Mosquitto broker**: instala e arranca.
 2. **Loja → ⋮ → Repositórios**: adiciona `https://github.com/zigbee2mqtt/hassio-zigbee2mqtt` e instala o **Zigbee2MQTT**.
@@ -84,19 +52,42 @@ Os dispositivos **Zigbee** saem do gateway Tuya e passam a falar com um adaptado
    - ZBDongle-E: `port: /dev/serial/by-id/<o-que-aparecer>` e `adapter: ember`.
 4. Arranca o Zigbee2MQTT e abre-o pela barra lateral.
 5. **Para cada dispositivo Zigbee**, um de cada vez:
-   1. Na SmartLife, remove o dispositivo do gateway ("Remover dispositivo").
+   1. Na SmartLife, remove o dispositivo do gateway ("Remover dispositivo"). É a última vez que usas a SmartLife para ele.
    2. No Zigbee2MQTT, carrega em **Permitir adesão (Permit join)**.
    3. Põe o dispositivo em modo de emparelhamento. Normalmente é manter o botão premido 5 a 10 segundos até a luz piscar depressa. Nas persianas costuma ser o botão de parar.
    4. Quando aparecer, dá-lhe o nome final (ver `docs/DEVICES.md`).
 6. Quando já não houver nada no gateway Tuya, podes desligá-lo.
 
-## 8. Token para a app (prepara já, usa-se na Fase 1)
+## 6. Dispositivos Wi-Fi Tuya (só se tiveres algum)
+
+Os dispositivos Tuya **Wi-Fi** cifram a comunicação com uma chave (*local key*) que só a Tuya conhece. Por isso, para os controlar localmente é preciso ir buscá-la **uma única vez**. Depois disso o HA fala com eles diretamente na rede de casa, sem nuvem. Há duas formas de o fazer:
+
+**A. Buscar a chave uma vez com a conta SmartLife que já tens** (não é preciso criar conta nova)
+
+1. **Instalar o HACS:** abre o Terminal (barra lateral) e corre:
+   ```
+   wget -O - https://get.hacs.xyz | bash -
+   ```
+   Reinicia o HA (**Definições → Sistema → Reiniciar**). Depois vai a **Adicionar integração → HACS** e segue o pedido de autorização do GitHub.
+2. No HACS, procura e instala **Tuya Local** (de `make-all`). Reinicia o HA.
+3. **Adicionar integração → Tuya Local** e escolhe a configuração **assistida pela nuvem (Smart Life)**. Na app SmartLife vai a **Eu → ⚙️ → Conta e segurança → Código de utilizador**, cola o código e lê o QR com a SmartLife.
+4. Adiciona cada dispositivo Wi-Fi e escolhe o tipo sugerido. Daqui para a frente funciona sem nuvem: se quiseres, podes bloquear o acesso à internet desses dispositivos no router.
+
+> Se voltares a emparelhar um destes dispositivos na SmartLife, a chave muda e tens de repetir o passo 3 para ele.
+
+**B. Substituir por equivalentes Zigbee**
+
+Se não quiseres tocar na Tuya nem uma vez, troca os dispositivos Wi-Fi por versões Zigbee (uma lâmpada Zigbee com temperatura de cor custa 10 a 20 €) e usa o passo 5.
+
+> Não uses a integração **Tuya** oficial do HA: depende sempre da nuvem da Tuya.
+
+## 7. Token para a app (prepara já, usa-se na Fase 1)
 
 1. No HA, clica no teu nome (canto inferior esquerdo) → **Segurança → Tokens de acesso de longa duração → Criar token**. Nome: `dashboard`.
 2. Copia o token **e guarda-o no gestor de palavras-passe**. O HA só o mostra uma vez.
 3. Nunca o ponhas no Git nem no código da app. Na Fase 1 fica no ficheiro `.env` do servidor, e quem o usa é o Caddy, não o browser.
 
-## 9. Copiar a configuração deste repositório para o HA
+## 8. Copiar a configuração deste repositório para o HA
 
 1. Abre o **Studio Code Server**.
 2. Copia `homeassistant/configuration.yaml` deste repositório por cima do `configuration.yaml` do HA. Mantém os ficheiros `automations.yaml`, `scripts.yaml` e `scenes.yaml` que o HA já tem.
@@ -108,7 +99,8 @@ Os dispositivos **Zigbee** saem do gateway Tuya e passam a falar com um adaptado
 No Mac:
 
 1. Abre `http://homeassistant.local:8123`.
-2. Em **Visão geral**, liga e desliga o **Candeeiro Nuno** e confirma que muda também na SmartLife.
+2. Em **Visão geral**, liga e desliga o **Candeeiro Nuno** e confirma que a lâmpada responde logo.
 3. Põe a **Persiana Cozinha** a 50 % no HA e confirma que ela se move.
 4. Liga **Todas as luzes** (o grupo) e confirma que acendem todas as luzes.
-5. Diz-me quais dispositivos ficaram no **Tuya Local** (Wi-Fi) e quais ficaram na Tuya nuvem / Zigbee.
+5. Desliga a internet do router durante um minuto e confirma que continuas a controlar tudo pelo HA.
+6. Diz-me quais dispositivos ficaram no **Zigbee2MQTT** e quais no **Tuya Local** (Wi-Fi).

@@ -1,12 +1,12 @@
 # Dispositivos e nomes
 
-A app, a Siri e os grupos usam os **IDs de entidade** desta tabela. Depois de adicionares os dispositivos no HA (INSTALL.md, passos 5 a 7), renomeia cada entidade para o ID indicado. Para isso vai a **Definições → Dispositivos e serviços → Entidades**, clica na entidade, abre ⚙️ e muda o **Nome** e o **ID da entidade**.
+A app, a Siri e os grupos usam os **IDs de entidade** desta tabela. Depois de adicionares os dispositivos no HA (INSTALL.md, passos 5 e 6), renomeia cada entidade para o ID indicado. Para isso vai a **Definições → Dispositivos e serviços → Entidades**, clica na entidade, abre ⚙️ e muda o **Nome** e o **ID da entidade**.
 
 O nome é o que a Siri e a app mostram, por isso deve soar natural em português.
 
 ## Interruptores de parede → luzes
 
-Os interruptores Tuya aparecem no HA como `switch`. Para que a app, os grupos e a Siri os tratem como luzes, converte-os:
+Os interruptores aparecem no HA como `switch`. Para que a app, os grupos e a Siri os tratem como luzes, converte-os:
 
 **Definições → Dispositivos e serviços → Ajudantes → Criar ajudante → Alterar o tipo de dispositivo de um interruptor** → escolhe o `switch` → tipo **Luz**.
 
